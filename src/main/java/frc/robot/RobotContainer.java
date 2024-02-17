@@ -17,6 +17,7 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.math.trajectory.constraint.DifferentialDriveVoltageConstraint;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -86,7 +87,6 @@ public class RobotContainer {
     POVButton leftPov = new POVButton(driverController,Constants.XboxController.POVXbox.LEFT_ANGLE);
     POVButton rightPov = new POVButton(driverController,Constants.XboxController.POVXbox.RIGHT_ANGLE);
 
-
     // XBOX CONTROLLER - AUX CONTROLLER
     // JoystickButton x1 = new JoystickButton(auxController, Constants.XboxController.X);
     // JoystickButton a1 = new JoystickButton(auxController, Constants.XboxController.A);
@@ -105,39 +105,54 @@ public class RobotContainer {
 
        //assign button to comnands
     //***** driver controller ******
+//X
     // x.onTrue(toggleGear);
     //   x.onTrue(stowTilt);
     //   x.onTrue(pidToTop);
+//A
     // a.onTrue(podiumTilt);
     //   a.whileTrue(manualDown);
-    //   a.onTrue(new AmpCameraAngle(ampTrapShooter));   
+    //   a.onTrue(new AmpCameraAngle(ampTrapShooter));  
+//B
     // b.whileTrue(setIntakeSpeed);
     //   b.onTrue(new FloorCameraAngle(ampTrapShooter));
     //   b.onTrue(pidToBot);
+//Y
     // y.onTrue(wooferTilt);
     //  y.whileTrue(manualUp);
+
     // rb.onTrue(autoPIDDrive);
         rb.onTrue(new InstantCommand(() ->drive.setMaxOutput(0.5)));
         rb.onFalse(new InstantCommand(() ->drive.setMaxOutput(1.0)));
-    //lb.onTrue(autoPIDTurn1);
-    // leftPov.whileTrue(llAngle);
-    // downPov.whileTrue(llDistance);
+    // lb.onTrue(autoPIDTurn1);
+    
+//POV
     // upPov.whileTrue(llTarget);
-    // downPov.onTrue(ampCameraAngle);
-    // upPov.onTrue(floorCameraAngle);
+    //   upPov.onTrue(floorCameraAngle);
+        // downPov.whileTrue(llDistance);
+    //  downPov.onTrue(ampCameraAngle);
+    // leftPov.whileTrue(llAngle);
 
     //***** Aux Controller ******
-   //   upPov1.whileTrue(ampMotorForward);
-   //   downPov1.whileTrue(ampMotorReverse);
-   //   y1.whileTrue(manualWooferSpeed);
-   //   a1.whileTrue(manualPodiumSpeed);
-   //   x1.whileTrue(pidWooferSpeed);//cartridge motors only
-   //   b1.whileTrue(pidPodiumSpeed);//cartridge motors only
-    //x1.onTrue(pidWooferShot); //intake and cart motors, also tilt
-    //y1.onTrue(pidPodiumShot); //intake and cart motors, also tilt
-    // x1.onTrue(frontShootGrabShoot);
-    //upPov1.whileTrue(manualIntake);
-    //downPov1.whileTrue(manualEject);
+//X
+   //  x1.whileTrue(pidWooferSpeed);//cartridge motors only
+   //   x1.onTrue(pidWooferShot); //intake and cart motors, also tilt
+   //   x1.onTrue(frontShootGrabShoot);
+//A
+   //  a1.whileTrue(manualPodiumSpeed);
+//B
+
+   //  b1.whileTrue(pidPodiumSpeed);//cartridge motors only
+//Y
+   //  y1.whileTrue(manualWooferSpeed);
+   //  y1.onTrue(pidPodiumShot); //intake and cart motors, also tilt
+
+//POV
+   //  upPov1.whileTrue(ampMotorForward);
+   //    upPov1.whileTrue(manualIntake);
+   //  downPov1.whileTrue(ampMotorReverse);
+   //    downPov1.whileTrue(manualEject);
+
   }
 
   /**
@@ -171,9 +186,11 @@ public class RobotContainer {
             // Start at the origin facing the +X direction
             new Pose2d(0, 0, new Rotation2d(0)),
             // Pass through these two interior waypoints, making an 's' curve path
-            List.of(new Translation2d(1, 1), new Translation2d(2, -1)),
-            // End 3 meters straight ahead of where we started, facing forward
-            new Pose2d(3, 0, new Rotation2d(0)),
+                List.of(
+                   new Translation2d(Units.inchesToMeters(0), Units.inchesToMeters(0))
+                 , new Translation2d(Units.inchesToMeters(0), Units.inchesToMeters(0))
+                 , new Translation2d(Units.inchesToMeters(0), Units.inchesToMeters(0))  )
+               , new Pose2d(Units.inchesToMeters(0),Units.inchesToMeters(0), new Rotation2d(0)),
             // Pass config
             config);
 

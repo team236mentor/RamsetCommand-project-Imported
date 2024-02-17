@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import java.util.List;
+
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.RamseteController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
@@ -16,18 +18,17 @@ import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.math.trajectory.constraint.DifferentialDriveVoltageConstraint;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.XboxController.Button;
-import frc.robot.Constants.AutoConstants;
-import frc.robot.Constants.DriveConstants;
-import frc.robot.Constants.OIConstants;
-import frc.robot.subsystems.Drive;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import java.util.List;
+import edu.wpi.first.wpilibj2.command.button.POVButton;
+import frc.robot.Constants.AutoConstants;
+import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.OIConstants;
+import frc.robot.subsystems.Drive;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -62,11 +63,81 @@ public class RobotContainer {
    * {@link JoystickButton}.
    */
   private void configureButtonBindings() {
-    // Drive at half speed when the right bumper is held
-    // creating the Button is already implimented in 2024 robot in RobotContainer 
-    new JoystickButton(driverController, Button.kRightBumper.value)
-        .onTrue(new InstantCommand(() ->drive.setMaxOutput(0.5)))
-        .onFalse(new InstantCommand(() ->drive.setMaxOutput(1)));
+    // original code to Drive at half speed when the right bumper is held
+    // creates new JoystickButton instead of  
+    //      new JoystickButton(driverController, Button.kRightBumper.value)
+    //          .onTrue(new InstantCommand(() ->drive.setMaxOutput(0.5)))
+    //          .onFalse(new InstantCommand(() ->drive.setMaxOutput(1)));
+
+    // CREATE BUTTONS
+         // *XBOXCONTROLLER - DRIVER CONTROLLER
+    JoystickButton x = new JoystickButton(driverController, Constants.XboxController.X);
+    JoystickButton a = new JoystickButton(driverController, Constants.XboxController.A);
+    JoystickButton b = new JoystickButton(driverController, Constants.XboxController.B);
+    JoystickButton y = new JoystickButton(driverController, Constants.XboxController.Y);
+    JoystickButton lb = new JoystickButton(driverController, Constants.XboxController.LB);
+    JoystickButton rb = new JoystickButton(driverController, Constants.XboxController.RB);
+    JoystickButton lm = new JoystickButton(driverController, Constants.XboxController.LM);
+    JoystickButton rm = new JoystickButton(driverController, Constants.XboxController.RM);
+    JoystickButton view = new JoystickButton(driverController, Constants.XboxController.VIEW);
+    JoystickButton menu = new JoystickButton(driverController, Constants.XboxController.MENU);
+    POVButton upPov = new POVButton(driverController,Constants.XboxController.POVXbox.UP_ANGLE);
+    POVButton downPov = new POVButton(driverController,Constants.XboxController.POVXbox.DOWN_ANGLE); 
+    POVButton leftPov = new POVButton(driverController,Constants.XboxController.POVXbox.LEFT_ANGLE);
+    POVButton rightPov = new POVButton(driverController,Constants.XboxController.POVXbox.RIGHT_ANGLE);
+
+
+    // XBOX CONTROLLER - AUX CONTROLLER
+    // JoystickButton x1 = new JoystickButton(auxController, Constants.XboxController.X);
+    // JoystickButton a1 = new JoystickButton(auxController, Constants.XboxController.A);
+    // JoystickButton b1 = new JoystickButton(auxController, Constants.XboxController.B);
+    // JoystickButton y1 = new JoystickButton(auxController, Constants.XboxController.Y);
+    // JoystickButton lb1 = new JoystickButton(auxController, Constants.XboxController.LB);
+    // JoystickButton rb1 = new JoystickButton(auxController, Constants.XboxController.RB);
+    // JoystickButton lm1 = new JoystickButton(auxController, Constants.XboxController.LM);
+    // JoystickButton rm1 = new JoystickButton(auxController, Constants.XboxController.RM);
+    // JoystickButton view1 = new JoystickButton(auxController, Constants.XboxController.VIEW);
+    // JoystickButton menu1 = new JoystickButton(auxController, Constants.XboxController.MENU);
+    // POVButton upPov1 = new POVButton(auxController,Constants.XboxController.POVXbox.UP_ANGLE);
+    // POVButton downPov1 = new POVButton(auxController,Constants.XboxController.POVXbox.DOWN_ANGLE);
+    // POVButton leftPov1 = new POVButton(auxController,Constants.XboxController.POVXbox.LEFT_ANGLE);
+    // POVButton rightPov1 = new POVButton(auxController,Constants.XboxController.POVXbox.RIGHT_ANGLE);
+
+       //assign button to comnands
+    //***** driver controller ******
+    // x.onTrue(toggleGear);
+    //   x.onTrue(stowTilt);
+    //   x.onTrue(pidToTop);
+    // a.onTrue(podiumTilt);
+    //   a.whileTrue(manualDown);
+    //   a.onTrue(new AmpCameraAngle(ampTrapShooter));   
+    // b.whileTrue(setIntakeSpeed);
+    //   b.onTrue(new FloorCameraAngle(ampTrapShooter));
+    //   b.onTrue(pidToBot);
+    // y.onTrue(wooferTilt);
+    //  y.whileTrue(manualUp);
+    // rb.onTrue(autoPIDDrive);
+        rb.onTrue(new InstantCommand(() ->drive.setMaxOutput(0.5)));
+        rb.onFalse(new InstantCommand(() ->drive.setMaxOutput(1.0)));
+    //lb.onTrue(autoPIDTurn1);
+    // leftPov.whileTrue(llAngle);
+    // downPov.whileTrue(llDistance);
+    // upPov.whileTrue(llTarget);
+    // downPov.onTrue(ampCameraAngle);
+    // upPov.onTrue(floorCameraAngle);
+
+    //***** Aux Controller ******
+   //   upPov1.whileTrue(ampMotorForward);
+   //   downPov1.whileTrue(ampMotorReverse);
+   //   y1.whileTrue(manualWooferSpeed);
+   //   a1.whileTrue(manualPodiumSpeed);
+   //   x1.whileTrue(pidWooferSpeed);//cartridge motors only
+   //   b1.whileTrue(pidPodiumSpeed);//cartridge motors only
+    //x1.onTrue(pidWooferShot); //intake and cart motors, also tilt
+    //y1.onTrue(pidPodiumShot); //intake and cart motors, also tilt
+    // x1.onTrue(frontShootGrabShoot);
+    //upPov1.whileTrue(manualIntake);
+    //downPov1.whileTrue(manualEject);
   }
 
   /**

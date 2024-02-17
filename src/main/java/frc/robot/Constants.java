@@ -59,4 +59,32 @@ public final class Constants {
     public static final double kRamseteB = 2;
     public static final double kRamseteZeta = 0.7;
   }
+
+  public static class XboxController {
+    public static final int A = 1;
+    public static final int B = 2;
+    public static final int X = 3;
+    public static final int Y = 4;
+    public static final int LB = 5;
+    public static final int RB = 6;
+    public static final int VIEW = 7;
+    public static final int MENU = 8;
+    public static final int LM = 9;
+    public static final int RM = 10;
+
+    public static class AxesXbox {
+      public static final int LX = 0;
+      public static final int LY = 1;
+      public static final int LTrig = 2;
+      public static final int RTrig = 3;
+      public static final int RX = 4;
+      public static final int RY = 5;
+    }
+    public class POVXbox {
+      public static final int UP_ANGLE = 0;
+      public static final int RIGHT_ANGLE = 90;
+      public static final int DOWN_ANGLE = 180;
+      public static final int LEFT_ANGLE = 270;
+    }
+  }
 }

@@ -4,7 +4,6 @@
 
 package frc.robot;
 
-import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.util.Units;
 
 /**
@@ -28,8 +27,6 @@ public final class Constants {
     public static final boolean kRightEncoderReversed = true;         
 
     public static final double kTrackwidthMeters =  Units.inchesToMeters(24);    //  0.69;   
-    public static final DifferentialDriveKinematics kDriveKinematics =
-        new DifferentialDriveKinematics(kTrackwidthMeters);
 
     public static final int kEncoderCPR = 512;    //  1024   counts/ticks per revolution   
     public static final double kWheelDiameterMeters = Units.inchesToMeters(6);  //  0.15;  

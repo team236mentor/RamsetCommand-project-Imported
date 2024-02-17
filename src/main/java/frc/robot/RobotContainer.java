@@ -10,6 +10,7 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
@@ -19,7 +20,7 @@ import edu.wpi.first.wpilibj.XboxController.Button;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
-import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.Drive;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -36,22 +37,22 @@ import java.util.List;
  */
 public class RobotContainer {
   // The robot's subsystems
-  private final DriveSubsystem drive = new DriveSubsystem();
+  private final Drive drive = new Drive();
 
   // The driver's controller
-  XboxController driverController = new XboxController(OIConstants.kDriverControllerPort);
+  private XboxController driverController = new XboxController(OIConstants.kDriverControllerPort);
+  private static final DifferentialDriveKinematics kDriveKinematics =
+        new DifferentialDriveKinematics(Constants.DriveConstants.kTrackwidthMeters);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the button bindings
     configureButtonBindings();
 
-    // Configure default commands
-    // Set the default drive command to split-stick arcade drive
-drive.setDefaultCommand(
-        // A split-stick arcade command, with forward/backward controlled by the left
-        // hand, and turning controlled by the right.
-        new RunCommand( () -> drive.arcadeDrive( -driverController.getLeftY(),-driverController.getRightX())));
+     /**
+     * Configure default commands
+     * call method to Set the default robot command as drive implimenting a arcade drive  */
+    drive.setDefaultCommand( new RunCommand( () -> drive.arcadeDrive( -driverController.getLeftY(),-driverController.getRightX())));
   }
 
   /**
@@ -62,6 +63,7 @@ drive.setDefaultCommand(
    */
   private void configureButtonBindings() {
     // Drive at half speed when the right bumper is held
+    // creating the Button is already implimented in 2024 robot in RobotContainer 
     new JoystickButton(driverController, Button.kRightBumper.value)
         .onTrue(new InstantCommand(() ->drive.setMaxOutput(0.5)))
         .onFalse(new InstantCommand(() ->drive.setMaxOutput(1)));
@@ -69,7 +71,6 @@ drive.setDefaultCommand(
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
-   *
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
@@ -80,7 +81,7 @@ drive.setDefaultCommand(
                 DriveConstants.ksVolts,
                 DriveConstants.kvVoltSecondsPerMeter,
                 DriveConstants.kaVoltSecondsSquaredPerMeter),
-            DriveConstants.kDriveKinematics,
+            kDriveKinematics,
             10);
 
     // Create config for trajectory
@@ -89,7 +90,7 @@ drive.setDefaultCommand(
                 AutoConstants.kMaxSpeedMetersPerSecond,
                 AutoConstants.kMaxAccelerationMetersPerSecondSquared)
             // Add kinematics to ensure max speed is actually obeyed
-            .setKinematics(DriveConstants.kDriveKinematics)
+            .setKinematics(kDriveKinematics)
             // Apply the voltage constraint
             .addConstraint(autoVoltageConstraint);
 
@@ -114,7 +115,7 @@ drive.setDefaultCommand(
                 DriveConstants.ksVolts,
                 DriveConstants.kvVoltSecondsPerMeter,
                 DriveConstants.kaVoltSecondsSquaredPerMeter),
-            DriveConstants.kDriveKinematics,
+            kDriveKinematics,
         drive::getWheelSpeeds,
             new PIDController(DriveConstants.kPDriveVel, 0, 0),
             new PIDController(DriveConstants.kPDriveVel, 0, 0),

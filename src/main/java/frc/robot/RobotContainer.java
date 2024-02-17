@@ -36,10 +36,10 @@ import java.util.List;
  */
 public class RobotContainer {
   // The robot's subsystems
-  private final DriveSubsystem m_robotDrive = new DriveSubsystem();
+  private final DriveSubsystem drive = new DriveSubsystem();
 
   // The driver's controller
-  XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
+  XboxController driverController = new XboxController(OIConstants.kDriverControllerPort);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -48,13 +48,10 @@ public class RobotContainer {
 
     // Configure default commands
     // Set the default drive command to split-stick arcade drive
-    m_robotDrive.setDefaultCommand(
+drive.setDefaultCommand(
         // A split-stick arcade command, with forward/backward controlled by the left
         // hand, and turning controlled by the right.
-        new RunCommand(
-            () -> m_robotDrive.arcadeDrive( -m_driverController.getLeftY(),
-                                            -m_driverController.getRightX()), 
-                                            m_robotDrive));
+        new RunCommand( () -> drive.arcadeDrive( -driverController.getLeftY(),-driverController.getRightX())));
   }
 
   /**
@@ -65,9 +62,9 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     // Drive at half speed when the right bumper is held
-    new JoystickButton(m_driverController, Button.kRightBumper.value)
-        .onTrue(new InstantCommand(() -> m_robotDrive.setMaxOutput(0.5)))
-        .onFalse(new InstantCommand(() -> m_robotDrive.setMaxOutput(1)));
+    new JoystickButton(driverController, Button.kRightBumper.value)
+        .onTrue(new InstantCommand(() ->drive.setMaxOutput(0.5)))
+        .onFalse(new InstantCommand(() ->drive.setMaxOutput(1)));
   }
 
   /**
@@ -111,24 +108,24 @@ public class RobotContainer {
     RamseteCommand ramseteCommand =
         new RamseteCommand(
             exampleTrajectory,
-            m_robotDrive::getPose,
+        drive::getPose,
             new RamseteController(AutoConstants.kRamseteB, AutoConstants.kRamseteZeta),
             new SimpleMotorFeedforward(
                 DriveConstants.ksVolts,
                 DriveConstants.kvVoltSecondsPerMeter,
                 DriveConstants.kaVoltSecondsSquaredPerMeter),
             DriveConstants.kDriveKinematics,
-            m_robotDrive::getWheelSpeeds,
+        drive::getWheelSpeeds,
             new PIDController(DriveConstants.kPDriveVel, 0, 0),
             new PIDController(DriveConstants.kPDriveVel, 0, 0),
             // RamseteCommand passes volts to the callback
-            m_robotDrive::tankDriveVolts,
-            m_robotDrive);
+        drive::tankDriveVolts,
+        drive);
 
     // Reset odometry to the initial pose of the trajectory, run path following
     // command, then stop at the end.
-    return Commands.runOnce(() -> m_robotDrive.resetOdometry(exampleTrajectory.getInitialPose()))
+    return Commands.runOnce(() ->drive.SetNewPose(exampleTrajectory.getInitialPose()))
         .andThen(ramseteCommand)
-        .andThen(Commands.runOnce(() -> m_robotDrive.tankDriveVolts(0, 0)));
+        .andThen(Commands.runOnce(() ->drive.tankDriveVolts(0, 0)));
   }
 }

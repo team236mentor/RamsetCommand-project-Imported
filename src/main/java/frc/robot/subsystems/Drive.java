@@ -18,7 +18,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
 
 
-public class DriveSubsystem extends SubsystemBase {
+public class Drive extends SubsystemBase {
   
   // The motors on the left side of the drive.
   private final CANSparkMax leftLeader = new CANSparkMax(DriveConstants.kLeftMotor1Port,MotorType.kBrushless);
@@ -51,7 +51,7 @@ public class DriveSubsystem extends SubsystemBase {
   private final DifferentialDriveOdometry odometry;
 
   /** Creates a new DriveSubsystem. */
-  public DriveSubsystem() {
+  public Drive() {
     SendableRegistry.addChild(drive, leftLeader);
     SendableRegistry.addChild(drive, rightLeader);
 

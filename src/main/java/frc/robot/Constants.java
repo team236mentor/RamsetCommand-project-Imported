@@ -22,18 +22,19 @@ public final class Constants {
     public static final int kRightMotor2Port = 32;   //  32  right rear
 
     
-    public static final int[] kLeftEncoderPorts = new int[] {18, 19};   //DIO_LDRIVE_ENC_A,B = 18 , 19
-    public static final int[] kRightEncoderPorts = new int[] {13, 12};  //DIO_RDRIVE_ENC_A,B = 13 , 12  (or 8,9 NAVX ports)
+    public static final int[] kLeftEncoderPorts = new int[] {12, 13};   //  DIO_LDRIVE_ENC_A,B = 18 , 19  (roboRio ports are 0-9)
+    public static final int[] kRightEncoderPorts = new int[] {10, 11};  //  DIO_RDRIVE_ENC_A,B = 13 , 12  (NAVX ports are 10-19)
+
     public static final boolean kLeftEncoderReversed = false;         
     public static final boolean kRightEncoderReversed = true;         
 
-    public static final double kTrackwidthMeters =  Units.inchesToMeters(24);    //  0.69;   
+    public static final double kTrackwidthMeters =  Units.inchesToMeters(22);    //  0.69;   2023 robot 22inches
 
-    public static final int kEncoderCPR = 512;    //  2023 robot code lists 512 counts/ticks per revolution   
+    public static final int kEncoderCPR = 128;    // measured as bourns Inc ENS1J-B28-L00128L   //  2023 robot code lists 512 counts/ticks per revolution   
     public static final double kWheelDiameterMeters = Units.inchesToMeters(6);  //  0.15;  
-    public static final double kEncoderDistancePerPulse =
-        // Assumes the encoders are directly mounted on the wheel shafts
-        (kWheelDiameterMeters * Math.PI) / (double) kEncoderCPR;
+   
+    // Assumes the encoders are directly mounted on the wheel shafts 
+    public static final double kEncoderDistancePerPulse = (kWheelDiameterMeters * Math.PI) / kEncoderCPR;
 
     // These are example values only - DO NOT USE THESE FOR YOUR OWN ROBOT!
     // These characterization values MUST be determined either experimentally or theoretically

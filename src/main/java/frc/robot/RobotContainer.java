@@ -20,6 +20,7 @@ import edu.wpi.first.math.trajectory.constraint.DifferentialDriveVoltageConstrai
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -168,8 +169,7 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // Create a voltage constraint to ensure we don't accelerate too fast
-    var autoVoltageConstraint =
-        new DifferentialDriveVoltageConstraint(
+    var autoVoltageConstraint = new DifferentialDriveVoltageConstraint(
             new SimpleMotorFeedforward(
                 DriveConstants.ksVolts,
                 DriveConstants.kvVoltSecondsPerMeter,
@@ -178,8 +178,7 @@ public class RobotContainer {
             10);
 
     // Create config for trajectory
-    TrajectoryConfig config =
-        new TrajectoryConfig(
+    TrajectoryConfig config = new TrajectoryConfig(
                 AutoConstants.kMaxSpeedMetersPerSecond,
                 AutoConstants.kMaxAccelerationMetersPerSecondSquared)
             // Add kinematics to ensure max speed is actually obeyed
@@ -189,6 +188,10 @@ public class RobotContainer {
 
     // An choice of example trajectory base 
     // IMPORTANT : All units in meters
+    SmartDashboard.putBoolean("current switch 1:",autoSwitch1.get());
+    SmartDashboard.putBoolean("current switch 2:",autoSwitch2.get());
+    SmartDashboard.putBoolean("current switch 3:",autoSwitch3.get());
+    SmartDashboard.putBoolean("current switch 4:",autoSwitch4.get());
 
     if (autoSwitch1.get() == true ) {
             //option 1 for driving 
@@ -216,15 +219,15 @@ public class RobotContainer {
                , new Pose2d(Units.inchesToMeters(0),Units.inchesToMeters(0), new Rotation2d(0)),
             // Pass config
             config);
-    } else if (autoSwitch3.get() == true ) {
+    } else  {
        exampleTrajectory = TrajectoryGenerator.generateTrajectory(
             // Start at the origin facing the +X direction
-            new Pose2d(0, 0, new Rotation2d(0)),
+            new Pose2d(0, 0, new Rotation2d(180)),
             // Pass through these two interior waypoints, making an 's' curve path
                 List.of(
-                   new Translation2d(Units.inchesToMeters(0), Units.inchesToMeters(0))
-                 , new Translation2d(Units.inchesToMeters(0), Units.inchesToMeters(0))  )
-               , new Pose2d(Units.inchesToMeters(0),Units.inchesToMeters(0), new Rotation2d(0)),
+                   new Translation2d(Units.inchesToMeters(30), Units.inchesToMeters(30))
+                 , new Translation2d(Units.inchesToMeters(60), Units.inchesToMeters(-30))  )
+               , new Pose2d(Units.inchesToMeters(90),Units.inchesToMeters(0), new Rotation2d(0)),
             // Pass config
             config);
     }

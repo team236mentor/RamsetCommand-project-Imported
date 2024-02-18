@@ -14,6 +14,7 @@ import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.util.sendable.SendableRegistry;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
 
@@ -75,6 +76,9 @@ public class Drive extends SubsystemBase {
 
   @Override
   public void periodic() {
+    SmartDashboard.putNumber("leftEncoder :",leftEncoder.get());
+    SmartDashboard.putNumber("rightEncoder :",rightEncoder.get());
+
     // Update the odometry in the periodic block
     odometry.update(
         gyro.getRotation2d(), leftEncoder.getDistance(), rightEncoder.getDistance());

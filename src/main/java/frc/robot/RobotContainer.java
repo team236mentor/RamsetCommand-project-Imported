@@ -18,6 +18,7 @@ import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.math.trajectory.constraint.DifferentialDriveVoltageConstraint;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -40,6 +41,12 @@ import frc.robot.subsystems.Drive;
 public class RobotContainer {
   // The robot's subsystems
   private final Drive drive = new Drive();
+  private Trajectory exampleTrajectory;
+
+    private static DigitalInput autoSwitch1 = new DigitalInput(Constants.DriveConstants.DIO_AUTO_1);
+    private static DigitalInput autoSwitch2 = new DigitalInput(Constants.DriveConstants.DIO_AUTO_2);
+    private static DigitalInput autoSwitch3 = new DigitalInput(Constants.DriveConstants.DIO_AUTO_3);
+    private static DigitalInput autoSwitch4 = new DigitalInput(Constants.DriveConstants.DIO_AUTO_4);
 
   // The driver's controller
   private XboxController driverController = new XboxController(OIConstants.kDriverControllerPort);
@@ -180,9 +187,12 @@ public class RobotContainer {
             // Apply the voltage constraint
             .addConstraint(autoVoltageConstraint);
 
-    // An example trajectory to follow. All units in meters.
-    Trajectory exampleTrajectory =
-        TrajectoryGenerator.generateTrajectory(
+    // An choice of example trajectory base 
+    // IMPORTANT : All units in meters
+
+    if (autoSwitch1 == 1 ) {
+            //option 1 for driving 
+        exampleTrajectory = TrajectoryGenerator.generateTrajectory(
             // Start at the origin facing the +X direction
             new Pose2d(0, 0, new Rotation2d(0)),
             // Pass through these two interior waypoints, making an 's' curve path
@@ -193,6 +203,32 @@ public class RobotContainer {
                , new Pose2d(Units.inchesToMeters(0),Units.inchesToMeters(0), new Rotation2d(0)),
             // Pass config
             config);
+    } else if (autoSwitch1 ==2 ) {
+   //option 2 for driving 
+        exampleTrajectory = TrajectoryGenerator.generateTrajectory(
+            // Start at the origin facing the +X direction
+            new Pose2d(0, 0, new Rotation2d(0)),
+            // Pass through these two interior waypoints, making an 's' curve path
+                List.of(
+                   new Translation2d(Units.inchesToMeters(0), Units.inchesToMeters(0))
+                 , new Translation2d(Units.inchesToMeters(0), Units.inchesToMeters(0))
+                 , new Translation2d(Units.inchesToMeters(0), Units.inchesToMeters(0))  )
+               , new Pose2d(Units.inchesToMeters(0),Units.inchesToMeters(0), new Rotation2d(0)),
+            // Pass config
+            config);
+    } else if (autoSwitch3==1) {
+       exampleTrajectory = TrajectoryGenerator.generateTrajectory(
+            // Start at the origin facing the +X direction
+            new Pose2d(0, 0, new Rotation2d(0)),
+            // Pass through these two interior waypoints, making an 's' curve path
+                List.of(
+                   new Translation2d(Units.inchesToMeters(0), Units.inchesToMeters(0))
+                 , new Translation2d(Units.inchesToMeters(0), Units.inchesToMeters(0))  )
+               , new Pose2d(Units.inchesToMeters(0),Units.inchesToMeters(0), new Rotation2d(0)),
+            // Pass config
+            config);
+    }
+
 
     RamseteCommand ramseteCommand =
         new RamseteCommand(

@@ -21,6 +21,7 @@ public final class Constants {
     public static final int kRightMotor1Port = 1;   //   1   right front 
     public static final int kRightMotor2Port = 32;   //  32  right rear
 
+    
     public static final int[] kLeftEncoderPorts = new int[] {18, 19};   //DIO_LDRIVE_ENC_A,B = 18 , 19
     public static final int[] kRightEncoderPorts = new int[] {13, 12};  //DIO_RDRIVE_ENC_A,B = 13 , 12  (or 8,9 NAVX ports)
     public static final boolean kLeftEncoderReversed = false;         
@@ -52,6 +53,12 @@ public final class Constants {
   }
 
   public static final class AutoConstants {
+      //auto selector switches
+      public static final int DIO_AUTO_1 = 0;
+      public static final int DIO_AUTO_2 = 1;
+      public static final int DIO_AUTO_3 = 2; //2
+      public static final int DIO_AUTO_4 = 3;
+      
     public static final double kMaxSpeedMetersPerSecond = 3;
     public static final double kMaxAccelerationMetersPerSecondSquared = 1;
 

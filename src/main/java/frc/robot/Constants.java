@@ -31,7 +31,7 @@ public final class Constants {
     public static final DifferentialDriveKinematics kDriveKinematics =
         new DifferentialDriveKinematics(kTrackwidthMeters);
 
-    public static final int kEncoderCPR = 512;    //  1024   counts/ticks per revolution   
+    public static final int kEncoderCPR = 512;    //  512 counts/ticks per revolution 2023 robot
     public static final double kWheelDiameterMeters = Units.inchesToMeters(6);  //  0.15;  
     public static final double kEncoderDistancePerPulse =
         // Assumes the encoders are directly mounted on the wheel shafts

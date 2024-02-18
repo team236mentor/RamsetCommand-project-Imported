@@ -52,11 +52,13 @@ public class RobotContainer {
     m_robotDrive.setDefaultCommand(
         // A split-stick arcade command, with forward/backward controlled by the left
         // hand, and turning controlled by the right.
-        new RunCommand(
-            () -> m_robotDrive.arcadeDrive( -m_driverController.getLeftY(),
-                                            -m_driverController.getRightX()), 
-                                            m_robotDrive));
-  }
+        new RunCommand( 
+            () -> m_robotDrive.arcadeDrive( 
+                 -m_driverController.getLeftY()
+                , m_driverController.getRightX() ) 
+            // runCommand requirement
+            , m_robotDrive) );
+    }
 
   /**
    * Use this method to define your button->command mappings. Buttons can be created by
@@ -77,25 +79,25 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    // Create a voltage constraint to ensure we don't accelerate too fast
-    var autoVoltageConstraint =
-        new DifferentialDriveVoltageConstraint(
-            new SimpleMotorFeedforward(
-                DriveConstants.ksVolts,
-                DriveConstants.kvVoltSecondsPerMeter,
-                DriveConstants.kaVoltSecondsSquaredPerMeter),
-            DriveConstants.kDriveKinematics,
-            10);
+        // Create a voltage constraint to ensure we don't accelerate too fast
+  var autoVoltageConstraint =
+      new DifferentialDriveVoltageConstraint(
+          new SimpleMotorFeedforward(
+              DriveConstants.ksVolts,
+              DriveConstants.kvVoltSecondsPerMeter,
+              DriveConstants.kaVoltSecondsSquaredPerMeter),
+          DriveConstants.kDriveKinematics,
+          10);
 
-    // Create config for trajectory
-    TrajectoryConfig config =
-        new TrajectoryConfig(
-                AutoConstants.kMaxSpeedMetersPerSecond,
-                AutoConstants.kMaxAccelerationMetersPerSecondSquared)
-            // Add kinematics to ensure max speed is actually obeyed
-            .setKinematics(DriveConstants.kDriveKinematics)
-            // Apply the voltage constraint
-            .addConstraint(autoVoltageConstraint);
+  // Create config for trajectory
+  TrajectoryConfig config =
+      new TrajectoryConfig(
+              AutoConstants.kMaxSpeedMetersPerSecond,
+              AutoConstants.kMaxAccelerationMetersPerSecondSquared)
+          // Add kinematics to ensure max speed is actually obeyed
+          .setKinematics(DriveConstants.kDriveKinematics)
+          // Apply the voltage constraint
+          .addConstraint(autoVoltageConstraint);
 
     // An example trajectory to follow. All units in meters.
     Trajectory exampleTrajectory =
@@ -104,7 +106,7 @@ public class RobotContainer {
             new Pose2d(0, 0, new Rotation2d(0)),
             // Pass through these two interior waypoints, making an 's' curve path
             List.of(
-                new Translation2d(Units.inchesToMeters(10), Units.inchesToMeters(10)) 
+                 new Translation2d(Units.inchesToMeters(10), Units.inchesToMeters(10)) 
                , new Translation2d(Units.inchesToMeters(20), Units.inchesToMeters(-10))
                , new Translation2d(Units.inchesToMeters(30), Units.inchesToMeters(10))  )
                , new Pose2d(Units.inchesToMeters(60), Units.inchesToMeters(0), new Rotation2d(0)),
@@ -130,8 +132,8 @@ public class RobotContainer {
 
     // Reset odometry to the initial pose of the trajectory, run path following
     // command, then stop at the end.
-    return Commands.runOnce(() -> m_robotDrive.resetOdometry(exampleTrajectory.getInitialPose()))
+    return Commands.runOnce(() -> m_robotDrive.resetOdometry(exampleTrajectory.getInitialPose()) )
         .andThen(ramseteCommand)
-        .andThen(Commands.runOnce(() -> m_robotDrive.tankDriveVolts(0, 0)));
+        .andThen(Commands.runOnce(() -> m_robotDrive.tankDriveVolts(0, 0)) );
   }
 }

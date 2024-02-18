@@ -200,10 +200,9 @@ public class RobotContainer {
             new Pose2d(0, 0, new Rotation2d(0)),
             // Pass through these two interior waypoints, making an 's' curve path
                 List.of(
-                   new Translation2d(Units.inchesToMeters(0), Units.inchesToMeters(0))
-                 , new Translation2d(Units.inchesToMeters(0), Units.inchesToMeters(0))
-                 , new Translation2d(Units.inchesToMeters(0), Units.inchesToMeters(0))  )
-               , new Pose2d(Units.inchesToMeters(0),Units.inchesToMeters(0), new Rotation2d(0)),
+                   new Translation2d(Units.inchesToMeters(30), Units.inchesToMeters(0))
+                 , new Translation2d(Units.inchesToMeters(60), Units.inchesToMeters(-30))  )
+               , new Pose2d(Units.inchesToMeters(90),Units.inchesToMeters(0), new Rotation2d(0)),
             // Pass config
             config);
     } else if (autoSwitch1.get() == true  ) {
@@ -213,10 +212,10 @@ public class RobotContainer {
             new Pose2d(0, 0, new Rotation2d(0)),
             // Pass through these two interior waypoints, making an 's' curve path
                 List.of(
-                   new Translation2d(Units.inchesToMeters(0), Units.inchesToMeters(0))
-                 , new Translation2d(Units.inchesToMeters(0), Units.inchesToMeters(0))
-                 , new Translation2d(Units.inchesToMeters(0), Units.inchesToMeters(0))  )
-               , new Pose2d(Units.inchesToMeters(0),Units.inchesToMeters(0), new Rotation2d(0)),
+                   new Translation2d(Units.inchesToMeters(10), Units.inchesToMeters(0))
+                 , new Translation2d(Units.inchesToMeters(20), Units.inchesToMeters(10))
+                 , new Translation2d(Units.inchesToMeters(30), Units.inchesToMeters(-10))  )
+               , new Pose2d(Units.inchesToMeters(40),Units.inchesToMeters(20), new Rotation2d(0)),
             // Pass config
             config);
     } else  {

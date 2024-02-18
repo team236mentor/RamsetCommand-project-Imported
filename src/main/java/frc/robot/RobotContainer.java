@@ -43,10 +43,10 @@ public class RobotContainer {
   private final Drive drive = new Drive();
   private Trajectory exampleTrajectory;
 
-    private static DigitalInput autoSwitch1 = new DigitalInput(Constants.DriveConstants.DIO_AUTO_1);
-    private static DigitalInput autoSwitch2 = new DigitalInput(Constants.DriveConstants.DIO_AUTO_2);
-    private static DigitalInput autoSwitch3 = new DigitalInput(Constants.DriveConstants.DIO_AUTO_3);
-    private static DigitalInput autoSwitch4 = new DigitalInput(Constants.DriveConstants.DIO_AUTO_4);
+    private static DigitalInput autoSwitch1 = new DigitalInput(Constants.AutoConstants.DIO_AUTO_1);
+    private static DigitalInput autoSwitch2 = new DigitalInput(Constants.AutoConstants.DIO_AUTO_2);
+    private static DigitalInput autoSwitch3 = new DigitalInput(Constants.AutoConstants.DIO_AUTO_3);
+    private static DigitalInput autoSwitch4 = new DigitalInput(Constants.AutoConstants.DIO_AUTO_4);
 
   // The driver's controller
   private XboxController driverController = new XboxController(OIConstants.kDriverControllerPort);
@@ -190,7 +190,7 @@ public class RobotContainer {
     // An choice of example trajectory base 
     // IMPORTANT : All units in meters
 
-    if (autoSwitch1 == 1 ) {
+    if (autoSwitch1.get() == true ) {
             //option 1 for driving 
         exampleTrajectory = TrajectoryGenerator.generateTrajectory(
             // Start at the origin facing the +X direction
@@ -203,7 +203,7 @@ public class RobotContainer {
                , new Pose2d(Units.inchesToMeters(0),Units.inchesToMeters(0), new Rotation2d(0)),
             // Pass config
             config);
-    } else if (autoSwitch1 ==2 ) {
+    } else if (autoSwitch1.get() == true  ) {
    //option 2 for driving 
         exampleTrajectory = TrajectoryGenerator.generateTrajectory(
             // Start at the origin facing the +X direction
@@ -216,7 +216,7 @@ public class RobotContainer {
                , new Pose2d(Units.inchesToMeters(0),Units.inchesToMeters(0), new Rotation2d(0)),
             // Pass config
             config);
-    } else if (autoSwitch3==1) {
+    } else if (autoSwitch3.get() == true ) {
        exampleTrajectory = TrajectoryGenerator.generateTrajectory(
             // Start at the origin facing the +X direction
             new Pose2d(0, 0, new Rotation2d(0)),

@@ -29,7 +29,7 @@ public final class Constants {
 
     public static final double kTrackwidthMeters =  Units.inchesToMeters(24);    //  0.69;   
 
-    public static final int kEncoderCPR = 512;    //  1024   counts/ticks per revolution   
+    public static final int kEncoderCPR = 512;    //  2023 robot code lists 512 counts/ticks per revolution   
     public static final double kWheelDiameterMeters = Units.inchesToMeters(6);  //  0.15;  
     public static final double kEncoderDistancePerPulse =
         // Assumes the encoders are directly mounted on the wheel shafts
@@ -58,7 +58,7 @@ public final class Constants {
       public static final int DIO_AUTO_2 = 1;
       public static final int DIO_AUTO_3 = 2; //2
       public static final int DIO_AUTO_4 = 3;
-      
+
     public static final double kMaxSpeedMetersPerSecond = 3;
     public static final double kMaxAccelerationMetersPerSecondSquared = 1;
 

@@ -24,7 +24,6 @@ public class Drive extends SubsystemBase {
   // The motors on the left side of the drive.
   private final CANSparkMax leftLeader = new CANSparkMax(DriveConstants.kLeftMotor1Port,MotorType.kBrushless);
   private final CANSparkMax leftFollower = new CANSparkMax(DriveConstants.kLeftMotor2Port,MotorType.kBrushless);
-  
   // The motors on the right side of the drive.
   private final CANSparkMax rightLeader = new CANSparkMax(DriveConstants.kRightMotor1Port,MotorType.kBrushless);
   private final CANSparkMax rightFollower = new CANSparkMax(DriveConstants.kRightMotor2Port,MotorType.kBrushless);
@@ -37,13 +36,13 @@ public class Drive extends SubsystemBase {
   private final Encoder leftEncoder =  new Encoder(
           DriveConstants.kLeftEncoderPorts[0],
           DriveConstants.kLeftEncoderPorts[1],
-          DriveConstants.kLeftEncoderReversed);
+          DriveConstants.kLeftEncoderReversed );
 
   // The right-side drive encoder
   private final Encoder rightEncoder =  new Encoder(
           DriveConstants.kRightEncoderPorts[0],
           DriveConstants.kRightEncoderPorts[1],
-          DriveConstants.kRightEncoderReversed);
+          DriveConstants.kRightEncoderReversed );
 
   // The gyro sensor
   private final AHRS gyro = new AHRS();
@@ -70,9 +69,8 @@ public class Drive extends SubsystemBase {
 
     resetEncoders();
     odometry = new DifferentialDriveOdometry(
-            gyro.getRotation2d(), leftEncoder.getDistance(), rightEncoder.getDistance()
-            );
-  }
+            gyro.getRotation2d(), leftEncoder.getDistance(), rightEncoder.getDistance() );
+    }
 
   @Override
   public void periodic() {
@@ -88,15 +86,13 @@ public class Drive extends SubsystemBase {
    * Returns the currently-estimated pose of the robot.
    * @return The pose.
    */
-  public Pose2d getPose() {
-    return odometry.getPoseMeters();
-  }
+  public Pose2d getPose() { return odometry.getPoseMeters(); }
 
   /**
    * Returns the current wheel speeds of the robot.
    * @return The current wheel speeds.
    */
-  public DifferentialDriveWheelSpeeds getWheelSpeeds() {
+  public DifferentialDriveWheelSpeeds getWheelSpeeds() { 
     return new DifferentialDriveWheelSpeeds(leftEncoder.getRate(), rightEncoder.getRate());
   }
 
@@ -115,9 +111,7 @@ public class Drive extends SubsystemBase {
    * @param fwd the commanded forward movement
    * @param rot the commanded rotation
    */
-  public void arcadeDrive(double fwd, double rot) {
-    drive.arcadeDrive(fwd, rot);
-  }
+  public void arcadeDrive(double fwd, double rot) {  drive.arcadeDrive(fwd, rot); }
 
   /**
    * Controls the left and right sides of the drive directly with voltages.
@@ -140,25 +134,19 @@ public class Drive extends SubsystemBase {
    * Gets the average distance of the two encoders.
    * @return the average of the two encoder readings
    */
-  public double getAverageEncoderDistance() {
-    return (leftEncoder.getDistance() + rightEncoder.getDistance()) / 2.0;
-  }
+  public double getAverageEncoderDistance() { return (leftEncoder.getDistance() + rightEncoder.getDistance()) / 2.0; }
 
   /**
    * Gets the left drive encoder.
    * @return the left drive encoder
    */
-  public Encoder getLeftEncoder() {
-    return leftEncoder;
-  }
+  public Encoder getLeftEncoder() { return leftEncoder; }
 
   /**
    * Gets the right drive encoder.
    * @return the right drive encoder
    */
-  public Encoder getRightEncoder() {
-    return rightEncoder;
-  }
+  public Encoder getRightEncoder() { return rightEncoder; }
 
   /**
    * Sets the max output of the drive. Useful for scaling the drive to drive more slowly.
@@ -177,15 +165,12 @@ public class Drive extends SubsystemBase {
    * Returns the heading of the robot.
    * @return the robot's heading in degrees, from -180 to 180
    */
-  public double getHeading() {
-    return gyro.getRotation2d().getDegrees();
-  }
+  public double getHeading() { return gyro.getRotation2d().getDegrees(); }
 
   /**
    * Returns the turn rate of the robot.
    * @return The turn rate of the robot, in degrees per second
    */
-  public double getTurnRate() {
-    return -gyro.getRate();
-  }
+  public double getTurnRate() { return -gyro.getRate(); }
+
 }

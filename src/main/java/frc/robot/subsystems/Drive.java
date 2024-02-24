@@ -14,7 +14,9 @@ import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.util.sendable.SendableRegistry;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.LimelightHelpers;
 import frc.robot.Constants.DriveConstants;
 
 
@@ -78,6 +80,12 @@ public class Drive extends SubsystemBase {
     // Update the odometry in the periodic block
     odometry.update(
         gyro.getRotation2d(), leftEncoder.getDistance(), rightEncoder.getDistance());
+
+            LimelightHelpers.LimelightResults llresults = LimelightHelpers.getLatestResults("limelight");
+            double[] botposeRed = llresults.targetingResults.botpose;
+            SmartDashboard.putNumberArray("Limelight Pose", botposeRed);
+            //  double pipelineLatency = llresults.results.latency_pipeline;
+            //  LimelightHelpers.LimelightTarget_Fiducial = llresults.results.targets_Fiducials;
   }
 
   /**

@@ -28,10 +28,9 @@ public final class Constants {
     public static final boolean kRightEncoderReversed = true;         
 
     public static final double kTrackwidthMeters =  Units.inchesToMeters(24);    //  0.69;   
-    public static final DifferentialDriveKinematics kDriveKinematics =
-        new DifferentialDriveKinematics(kTrackwidthMeters);
+    public static final DifferentialDriveKinematics kDriveKinematics = new DifferentialDriveKinematics(kTrackwidthMeters);
 
-    public static final int kEncoderCPR = 128;    // measured as bourns Inc ENS1J-B28-L00128L   //  2023 robot code lists 512 counts/ticks per revolution 
+    public static final int kEncoderCPR = 128;    // bourns Inc ENS1J-B28-L00128L   //  2023 robot code lists 512 counts/ticks per revolution 
     public static final double kWheelDiameterMeters = Units.inchesToMeters(6);  //  0.15;  
     public static final double kEncoderDistancePerPulse =
         // Assumes the encoders are directly mounted on the wheel shafts
@@ -43,11 +42,11 @@ public final class Constants {
     // The Robot Characterization Toolsuite provides a convenient tool for obtaining these
     // values for your robot.
     public static final double ksVolts = 0.22;
-    public static final double kvVoltSecondsPerMeter = 1.98;
-    public static final double kaVoltSecondsSquaredPerMeter = 0.2;
+    public static final double kvVoltSecondsPerMeter = 1.98;        // example 1.98 kVs/Meter
+    public static final double kaVoltSecondsSquaredPerMeter = 0.2;  // example 0.2 kV*Sec^2/Meter
 
     // Example value only - as above, this must be tuned for your drive!
-    public static final double kPDriveVel = 8.5;
+    public static final double kPDriveVel = 8.5;                    // example 8.5 velocity Meters/sec
   }
 
   public static final class OIConstants {
@@ -55,8 +54,8 @@ public final class Constants {
   }
 
   public static final class AutoConstants {
-    public static final double kMaxSpeedMetersPerSecond = 3;
-    public static final double kMaxAccelerationMetersPerSecondSquared = 1;
+    public static final double kMaxSpeedMetersPerSecond = 3;                // example 3 meters/sec
+    public static final double kMaxAccelerationMetersPerSecondSquared = 1;  // example 1 Meter/Sec^2
 
     // Reasonable baseline values for a RAMSETE follower in units of meters and seconds
     public static final double kRamseteB = 2;

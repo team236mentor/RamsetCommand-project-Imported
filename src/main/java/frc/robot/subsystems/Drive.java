@@ -130,7 +130,6 @@ public class Drive extends SubsystemBase {
       rightEncoder.reset();
   }
 
-
   /** Gets the average distance of the two encoders.
    * @return the average of the two encoder readings */
   public double getAverageEncoderDistance() {

@@ -17,6 +17,7 @@ import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.math.trajectory.constraint.DifferentialDriveVoltageConstraint;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
@@ -46,7 +47,7 @@ public class RunTrajectory extends Command {
   @Override
   public void initialize() {
     
-      // PATH FOLLOWING duplicate to RobotContainer
+    // PATH FOLLOWING duplicate to RobotContainer
     // Create a voltage constraint to ensure we don't accelerate too fast
     var autoVoltageConstraint =
         new DifferentialDriveVoltageConstraint(
@@ -79,33 +80,39 @@ public class RunTrajectory extends Command {
         , config);
 
       // PATH FOLLOWING duplicate to RobotContainer
-      ramseteCommand = new RamseteCommand(
-            exampleTrajectory,
-            drive::getPose,
-            new RamseteController(AutoConstants.kRamseteB, AutoConstants.kRamseteZeta),
-            new SimpleMotorFeedforward(
-                DriveConstants.ksVolts,
-                DriveConstants.kvVoltSecondsPerMeter,
-                DriveConstants.kaVoltSecondsSquaredPerMeter),
-            DriveConstants.kDriveKinematics,
-            drive::getWheelSpeeds,
-            new PIDController(DriveConstants.kPDriveVel, 0, 0),
-            new PIDController(DriveConstants.kPDriveVel, 0, 0),
-            // RamseteCommand passes volts to the callback
-            drive::tankDriveVolts,
-            drive);
+      // Reset odometry to the initial pose of the trajectory
+            drive.resetOdometry(exampleTrajectory.getInitialPose());
       }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
 
+    // PATH FOLLOWING:  set the command to run via button or automode        
+    // Reset odometry to the initial pose of the trajectory, run path following
+    ramseteCommand = new RamseteCommand(
+      exampleTrajectory,
+      drive::getPose,
+      new RamseteController(AutoConstants.kRamseteB, AutoConstants.kRamseteZeta),
+      new SimpleMotorFeedforward(
+          DriveConstants.ksVolts,
+          DriveConstants.kvVoltSecondsPerMeter,
+          DriveConstants.kaVoltSecondsSquaredPerMeter),
+      DriveConstants.kDriveKinematics,
+      drive::getWheelSpeeds,
+      new PIDController(DriveConstants.kPDriveVel, 0, 0),
+      new PIDController(DriveConstants.kPDriveVel, 0, 0),
+      // RamseteCommand passes volts to the callback
+      drive::tankDriveVolts,
+      drive);
+
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-
+    // stop the robot might not be required as pose has no velocity or next pose
+    drive.tankDriveVolts(0, 0);
   }
 
   // Returns true when the command should end.

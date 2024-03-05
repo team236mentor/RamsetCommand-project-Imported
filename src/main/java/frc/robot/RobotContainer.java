@@ -4,30 +4,18 @@
 
 package frc.robot;
 
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.RamseteController;
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
-import edu.wpi.first.math.trajectory.TrajectoryGenerator;
-import edu.wpi.first.math.trajectory.constraint.DifferentialDriveVoltageConstraint;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
-import frc.robot.Constants.AutoConstants;
-import frc.robot.Constants.DriveConstants;
-import frc.robot.Constants.OIConstants;
-import frc.robot.subsystems.Drive;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import java.util.List;
+import frc.robot.Constants.OIConstants;
+import frc.robot.commands.RunTrajectory;
+import frc.robot.subsystems.Drive;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -38,7 +26,8 @@ import java.util.List;
 public class RobotContainer {
   // The robot's subsystems
   private final Drive drive = new Drive();
-
+  private RunTrajectory runTrajectory = new RunTrajectory(drive);
+  
   // The driver's controller
   XboxController driverController = new XboxController(OIConstants.kDriverControllerPort);
 
@@ -57,61 +46,12 @@ public class RobotContainer {
     drive.setDefaultCommand( 
     // this is in-lue of a command class that defines the arcade inputs
     new RunCommand( 
-            () -> drive.arcadeDrive( 
+           () -> drive.arcadeDrive( 
                 -driverController.getLeftY()
                 , driverController.getRightX() )
                 , drive) );
 
-    // PATH FOLLOWING: add autoVoltageConstraint to RobotContainer constructor or in new Command 
-    // Create a voltage constraint to ensure we don't accelerate too fast
-    var autoVoltageConstraint =  new DifferentialDriveVoltageConstraint(
-          new SimpleMotorFeedforward(
-              DriveConstants.ksVolts
-              , DriveConstants.kvVoltSecondsPerMeter
-              , DriveConstants.kaVoltSecondsSquaredPerMeter)
-        , DriveConstants.kDriveKinematics
-        , 10);
 
-    // PATH FOLLOWING: add TrajectoryConfig to RobotConstructor
-    // Create config for trajectory
-    config = new TrajectoryConfig(
-            AutoConstants.kMaxSpeedMetersPerSecond,
-            AutoConstants.kMaxAccelerationMetersPerSecondSquared)
-            // Add kinematics to ensure max speed is actually obeyed
-            .setKinematics(DriveConstants.kDriveKinematics)
-            // Apply the voltage constraint
-            .addConstraint(autoVoltageConstraint);
-
-        // PATH FOLLOWING: add TrajectoryGenerator to _________
-        // An example trajectory to follow. All units in meters.
-        exampleTrajectory = TrajectoryGenerator.generateTrajectory(
-            // Start at the origin facing the +X direction
-            new Pose2d(0, 0, new Rotation2d(0)),
-            // Pass through these two interior waypoints, making an 's' curve path
-            List.of(
-                new Translation2d(Units.inchesToMeters(10), Units.inchesToMeters(10)) 
-            , new Translation2d(Units.inchesToMeters(20), Units.inchesToMeters(-10))
-            , new Translation2d(Units.inchesToMeters(30), Units.inchesToMeters(10))  )
-            , new Pose2d(Units.inchesToMeters(60), Units.inchesToMeters(0), new Rotation2d(0)),
-            // Pass config
-            config);
-
-        // PATH FOLLOWING: add RamseteCommand to RobotContainer
-        ramseteCommand = new RamseteCommand(
-                exampleTrajectory,
-                drive::getPose,
-                new RamseteController(AutoConstants.kRamseteB, AutoConstants.kRamseteZeta),
-                new SimpleMotorFeedforward(
-                    DriveConstants.ksVolts,
-                    DriveConstants.kvVoltSecondsPerMeter,
-                    DriveConstants.kaVoltSecondsSquaredPerMeter),
-                DriveConstants.kDriveKinematics,
-                drive::getWheelSpeeds,
-                new PIDController(DriveConstants.kPDriveVel, 0, 0),
-                new PIDController(DriveConstants.kPDriveVel, 0, 0),
-                // RamseteCommand passes volts to the callback
-                drive::tankDriveVolts,
-                drive);
 
     }
 
@@ -124,8 +64,16 @@ public class RobotContainer {
   private void configureButtonBindings() {
     // Drive at half speed when the right bumper is held
     new JoystickButton(driverController, Button.kRightBumper.value)
-        .onTrue(new InstantCommand(() -> drive.setMaxOutput(0.5)))
-        .onFalse(new InstantCommand(() -> drive.setMaxOutput(1))); 
+        .onTrue(new InstantCommand( () -> drive.setMaxOutput(0.5)))
+        .onFalse(new InstantCommand( () -> drive.setMaxOutput(1))); 
+
+    //JoystickButton buttonA = new JoystickButton(driverController, Button.kA.value);
+    //buttonA.onTrue(runTrajectory);
+
+    // JoystickButton buttonB = new JoystickButton(driverController, 2);
+        
+
+        
   }
 
   /**
@@ -133,14 +81,7 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-
-    // PATH FOLLOWING:  set the command to run via button or automode        
-    // Reset odometry to the initial pose of the trajectory, run path following
-    // command, then stop at the end.
-    return Commands.runOnce(() -> drive.resetOdometry(exampleTrajectory.getInitialPose()) )
-    .andThen(ramseteCommand)
-    .andThen(Commands.runOnce(() -> drive.tankDriveVolts(0, 0)) );
-
+    return runTrajectory;
 
   }
 }

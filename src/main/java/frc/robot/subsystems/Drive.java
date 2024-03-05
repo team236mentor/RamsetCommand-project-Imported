@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.LimelightHelpers;
 
+
 public class Drive extends SubsystemBase {
   
   // motors on the left side of the drive.
@@ -40,6 +41,7 @@ public class Drive extends SubsystemBase {
           DriveConstants.kRightEncoderPorts[0],
           DriveConstants.kRightEncoderPorts[1],
           DriveConstants.kRightEncoderReversed);
+  
   // The gyro sensor
   private final AHRS gyro = new AHRS();
 
@@ -70,7 +72,8 @@ public class Drive extends SubsystemBase {
 
     resetEncoders();
 
-  // PATH FOLLOWING: add odometry to DRIVE 
+// PATH FOLLOWING: add odometry to DRIVE 
+    // this tracks the robots position as it moves through  gyro and both encoders
     odometry = new DifferentialDriveOdometry(
             gyro.getRotation2d(), leftEncoder.getDistance(), rightEncoder.getDistance());
   }
@@ -78,7 +81,7 @@ public class Drive extends SubsystemBase {
   @Override
   public void periodic() {
     
-  // PATH FOLLOWING: Update the odometry in the periodic block
+// PATH FOLLOWING: Update the odometry in the periodic block
     odometry.update(
         gyro.getRotation2d(), leftEncoder.getDistance(), rightEncoder.getDistance());
 
@@ -98,7 +101,7 @@ public class Drive extends SubsystemBase {
     return new DifferentialDriveWheelSpeeds(leftEncoder.getRate(), rightEncoder.getRate());
   }
 
-  // PATH FOLLOWING: 
+// PATH FOLLOWING: 
   /** @param pose reset the pose to which to set the odometry */
   public void resetOdometry(Pose2d pose) {
       resetEncoders();
@@ -108,20 +111,20 @@ public class Drive extends SubsystemBase {
           , pose );
     }
 
-  /** Drives the robot using arcade controls.
-  * @param fwd @param rot commanded forward and rotation movement */
-  public void arcadeDrive(double fwd, double rot) {
-    drive.arcadeDrive(fwd, rot);
-  }
-
-  // PATH FOLLOWING:
+// PATH FOLLOWING:
   /** Controls the left and right sides of the drive directly with voltages.
   * @param leftVolts @param rightVolts  the commanded left and right output
   */
   public void tankDriveVolts(double leftVolts, double rightVolts) {
-      leftLeader.setVoltage(leftVolts);
-      rightLeader.setVoltage(rightVolts);
-      drive.feed();
+    leftLeader.setVoltage(leftVolts);
+    rightLeader.setVoltage(rightVolts);
+    drive.feed();
+}
+
+  /** Drives the robot using arcade controls.
+  * @param fwd @param rot commanded forward and rotation movement */
+  public void arcadeDrive(double fwd, double rot) {
+    drive.arcadeDrive(fwd, rot);
   }
 
   /** Resets the drive encoders to currently read a position of 0. */
@@ -147,9 +150,7 @@ public class Drive extends SubsystemBase {
   public void setMaxOutput(double maxOutput) {  drive.setMaxOutput(maxOutput);  }
 
   /** Zeroes the heading of the robot */
-  // public void zeroHeading() {
-  //   gyro.reset();
-  // }
+  // public void zeroHeading() { gyro.reset(); }
 
   /** @return the robot's heading in degrees, from -180 to 180 */
   public double getHeading() {

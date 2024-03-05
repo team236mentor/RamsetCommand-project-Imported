@@ -28,6 +28,7 @@ public class RobotContainer {
   private final Drive drive = new Drive();
   private RunTrajectory runTrajectory = new RunTrajectory(drive);
   
+  
   // The driver's controller
   XboxController driverController = new XboxController(OIConstants.kDriverControllerPort);
 
@@ -46,13 +47,11 @@ public class RobotContainer {
     drive.setDefaultCommand( 
     // this is in-lue of a command class that defines the arcade inputs
     new RunCommand( 
-           () -> drive.arcadeDrive( 
-                -driverController.getLeftY()
-                , driverController.getRightX() )
-                , drive) );
-
-
-
+       () -> drive.arcadeDrive( 
+            -driverController.getLeftY()
+            , driverController.getRightX() )
+            , drive) );
+            
     }
 
   /**
@@ -62,18 +61,18 @@ public class RobotContainer {
    * {@link JoystickButton}.
    */
   private void configureButtonBindings() {
+    
     // Drive at half speed when the right bumper is held
     new JoystickButton(driverController, Button.kRightBumper.value)
         .onTrue(new InstantCommand( () -> drive.setMaxOutput(0.5)))
         .onFalse(new InstantCommand( () -> drive.setMaxOutput(1))); 
 
-    //JoystickButton buttonA = new JoystickButton(driverController, Button.kA.value);
-    //buttonA.onTrue(runTrajectory);
+    // buttons not required using defaultCommand
+      //JoystickButton buttonA = new JoystickButton(driverController, Button.kA.value);
+      //buttonA.onTrue(runTrajectory);
 
-    // JoystickButton buttonB = new JoystickButton(driverController, 2);
-        
-
-        
+      // JoystickButton buttonB = new JoystickButton(driverController, 2);
+       
   }
 
   /**

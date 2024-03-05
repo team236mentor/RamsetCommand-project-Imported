@@ -4,6 +4,8 @@
 
 package frc.robot.commands;
 
+import java.util.List;
+
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.RamseteController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
@@ -14,15 +16,11 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.math.trajectory.constraint.DifferentialDriveVoltageConstraint;
-import edu.wpi.first.math.util.Units;
-import edu.wpi.first.util.sendable.SendableRegistry;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.Drive;
-import java.util.List;
 
 public class RunTrajectory extends Command {
   Drive drive;
@@ -31,14 +29,10 @@ public class RunTrajectory extends Command {
   RamseteCommand ramseteCommand;
 
   // assume values will be in inches must convert to meters
-  private double[] startPose, endPose = {0,0,0};
-  private double[] trajectory1, trajectory2, trajectory3 = {0,0};
-  // private double[] traject2 = {60,-30};
-  // private double[] traject3 = {90,0};
-  // private double[] EndPose = {120,0,0};
-
-  private double[] metricStartPose, metricEndPose = {0,0,0};
-  private double[] metricTrajectory1, metricTrajectory2, metricTrajectory3 = {0,0};
+  private double[] startPose = {0,0,180};  // inches
+  private double[] trajectory1 = {30,-15};   
+  private double[] trajectory2 = {60,-30};
+  private double[] EndPose = {120,0,180};
 
   /** Creates a new runTrajectory. 
  * @return */
@@ -51,26 +45,8 @@ public class RunTrajectory extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    //TODO get the values of the trajectory path from SmartDashboard
-      startPose = SmartDashboard.getNumberArray("StartPose",startPose);
-    trajectory1 = SmartDashboard.getNumberArray("traject1",trajectory1);
-    trajectory2 = SmartDashboard.getNumberArray("traject2",trajectory2);
-    trajectory3 = SmartDashboard.getNumberArray("traject3",trajectory3);
-        endPose = SmartDashboard.getNumberArray("StartPose",endPose);
-
-    // convert the pose units from inches to metric 
-    for (int i = 0; i < 2; i++) {
-      metricStartPose[i] = Units.inchesToMeters(startPose[i]);
-      metricEndPose[i] = Units.inchesToMeters(endPose[i]);
-     }
-
-     // convert trajectory units from inches to metric 
-     for (int i = 0; i < 3; i++) {
-      metricTrajectory1[i] = Units.inchesToMeters(trajectory1[i]);
-      metricTrajectory2[i] = Units.inchesToMeters(trajectory2[i]);
-      metricTrajectory3[i] = Units.inchesToMeters(trajectory3[i]);
-     }
-
+    
+      // PATH FOLLOWING duplicate to RobotContainer
     // Create a voltage constraint to ensure we don't accelerate too fast
     var autoVoltageConstraint =
         new DifferentialDriveVoltageConstraint(
@@ -81,8 +57,9 @@ public class RunTrajectory extends Command {
             DriveConstants.kDriveKinematics,
             10);
 
-    // Create config for trajectory
-    config = new TrajectoryConfig(
+      // PATH FOLLOWING duplicate to RobotContainer
+      // Create config for trajectory
+      config = new TrajectoryConfig(
                 AutoConstants.kMaxSpeedMetersPerSecond,
                 AutoConstants.kMaxAccelerationMetersPerSecondSquared)
             // Add kinematics to ensure max speed is actually obeyed
@@ -90,17 +67,18 @@ public class RunTrajectory extends Command {
             // Apply the voltage constraint
             .addConstraint(autoVoltageConstraint);
 
-    // An example trajectory to follow. All units in meters.
+      // PATH FOLLOWING duplicate to RobotContainer
+      // An example trajectory to follow. All units in meters.
       exampleTrajectory = TrajectoryGenerator.generateTrajectory(
         // Start at the origin facing the +X direction
-        new Pose2d(metricStartPose[0],metricStartPose[1], new Rotation2d(metricStartPose[2]) ) ,
+        new Pose2d(startPose[0],startPose[1], new Rotation2d(startPose[2]) ) ,
         // Pass through these two interior waypoints, making an 's' curve path
-        List.of( new Translation2d(metricTrajectory1[0], metricTrajectory1[1])  
-            , new Translation2d(metricTrajectory2[0], metricTrajectory2[1])
-            , new Translation2d(metricTrajectory3[0], metricTrajectory3[1]) )
-        , new Pose2d( metricEndPose[0], metricEndPose[1], new Rotation2d(metricEndPose[2]))
+        List.of( new Translation2d(trajectory1[0], trajectory1[1])  
+               , new Translation2d(trajectory2[0], trajectory2[1]) )
+               , new Pose2d( EndPose[0], EndPose[1], new Rotation2d(EndPose[2]))
         , config);
 
+      // PATH FOLLOWING duplicate to RobotContainer
       ramseteCommand = new RamseteCommand(
             exampleTrajectory,
             drive::getPose,
@@ -120,11 +98,15 @@ public class RunTrajectory extends Command {
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+
+  }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+
+  }
 
   // Returns true when the command should end.
   @Override

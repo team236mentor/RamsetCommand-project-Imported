@@ -17,7 +17,6 @@ import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.math.trajectory.constraint.DifferentialDriveVoltageConstraint;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
@@ -47,7 +46,7 @@ public class RunTrajectory extends Command {
   @Override
   public void initialize() {
     
-    // PATH FOLLOWING duplicate to RobotContainer
+  // PATH FOLLOWING duplicate to RobotContainer
     // Create a voltage constraint to ensure we don't accelerate too fast
     var autoVoltageConstraint =
         new DifferentialDriveVoltageConstraint(
@@ -55,20 +54,20 @@ public class RunTrajectory extends Command {
                 DriveConstants.ksVolts,
                 DriveConstants.kvVoltSecondsPerMeter,
                 DriveConstants.kaVoltSecondsSquaredPerMeter),
-            DriveConstants.kDriveKinematics,
+            DriveConstants.driveKinematics,
             10);
 
-      // PATH FOLLOWING duplicate to RobotContainer
+  // PATH FOLLOWING duplicate to RobotContainer
       // Create config for trajectory
       config = new TrajectoryConfig(
-                AutoConstants.kMaxSpeedMetersPerSecond,
-                AutoConstants.kMaxAccelerationMetersPerSecondSquared)
+                AutoConstants.maxSpeedMetersPerSecond,
+                AutoConstants.maxAccelerationMetersPerSecondSquared)
             // Add kinematics to ensure max speed is actually obeyed
-            .setKinematics(DriveConstants.kDriveKinematics)
+            .setKinematics(DriveConstants.driveKinematics)
             // Apply the voltage constraint
             .addConstraint(autoVoltageConstraint);
 
-      // PATH FOLLOWING duplicate to RobotContainer
+  // PATH FOLLOWING duplicate to RobotContainer
       // An example trajectory to follow. All units in meters.
       exampleTrajectory = TrajectoryGenerator.generateTrajectory(
         // Start at the origin facing the +X direction
@@ -88,17 +87,17 @@ public class RunTrajectory extends Command {
   @Override
   public void execute() {
 
-    // PATH FOLLOWING:  set the command to run via button or automode        
+  // PATH FOLLOWING:  set the command to run via button or automode        
     // Reset odometry to the initial pose of the trajectory, run path following
     ramseteCommand = new RamseteCommand(
       exampleTrajectory,
       drive::getPose,
-      new RamseteController(AutoConstants.kRamseteB, AutoConstants.kRamseteZeta),
+      new RamseteController(),
       new SimpleMotorFeedforward(
           DriveConstants.ksVolts,
           DriveConstants.kvVoltSecondsPerMeter,
           DriveConstants.kaVoltSecondsSquaredPerMeter),
-      DriveConstants.kDriveKinematics,
+      DriveConstants.driveKinematics,
       drive::getWheelSpeeds,
       new PIDController(DriveConstants.kPDriveVel, 0, 0),
       new PIDController(DriveConstants.kPDriveVel, 0, 0),

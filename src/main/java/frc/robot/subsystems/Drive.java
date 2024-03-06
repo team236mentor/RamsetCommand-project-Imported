@@ -23,42 +23,41 @@ import frc.robot.LimelightHelpers;
 public class Drive extends SubsystemBase {
   
   // motors on the left side of the drive.
-  private final CANSparkMax leftLeader = new CANSparkMax(DriveConstants.kLeftMotor1Port,MotorType.kBrushless);
-  private final CANSparkMax leftFollower = new CANSparkMax(DriveConstants.kLeftMotor2Port,MotorType.kBrushless);
+  private final CANSparkMax leftLeader = new CANSparkMax(DriveConstants.ID_LEFT_FRONT,MotorType.kBrushless);
+  private final CANSparkMax leftFollower = new CANSparkMax(DriveConstants.ID_LEFT_REAR,MotorType.kBrushless);
   
   // motors on the right side of the drive.
-  private final CANSparkMax rightLeader = new CANSparkMax(DriveConstants.kRightMotor1Port,MotorType.kBrushless);
-  private final CANSparkMax rightFollower = new CANSparkMax(DriveConstants.kRightMotor2Port,MotorType.kBrushless);
+  private final CANSparkMax rightLeader = new CANSparkMax(DriveConstants.ID_RIGHT_FRONT,MotorType.kBrushless);
+  private final CANSparkMax rightFollower = new CANSparkMax(DriveConstants.ID_RIGHT_REAR,MotorType.kBrushless);
 
   // encoder channel A and B reverse, reversed direction
-  private final Encoder leftEncoder =  new Encoder(
-          DriveConstants.kLeftEncoderPorts[0],
-          DriveConstants.kLeftEncoderPorts[1],
-          DriveConstants.kLeftEncoderReversed);
+  private final Encoder leftEncoder =  new Encoder( 
+        DriveConstants.kLeftEncoderPorts[0] 
+      , DriveConstants.kLeftEncoderPorts[1] 
+      , DriveConstants.leftEncoderReversed);
 
   // encoder channel A and B reverse, reversed direction
   private final Encoder rightEncoder =  new Encoder(
-          DriveConstants.kRightEncoderPorts[0],
-          DriveConstants.kRightEncoderPorts[1],
-          DriveConstants.kRightEncoderReversed);
+            DriveConstants.kRightEncoderPorts[0] 
+          , DriveConstants.kRightEncoderPorts[1] 
+          , DriveConstants.rightEncoderReversed);
   
   // The gyro sensor
   private final AHRS gyro = new AHRS();
 
   // PATH FOLLOWING: add DifferentialDrive to DRIVE
       // robot drive left and right motor setter
-      private final DifferentialDrive drive = 
-        new DifferentialDrive(leftLeader::set, rightLeader::set);
+      private final DifferentialDrive diffDrive = new DifferentialDrive(leftLeader::set, rightLeader::set);
 
   // PATH FOLLOWING: add DifferentialDriveOdometry to DRIVE
       // Odometry class for tracking robot pose
-      private final DifferentialDriveOdometry odometry;
+      private final DifferentialDriveOdometry diffOdometry;
 
 
   /** Creates a new DriveSubsystem. */
   public Drive() {
-    SendableRegistry.addChild(drive, leftLeader);
-    SendableRegistry.addChild(drive, rightLeader);
+    SendableRegistry.addChild(diffDrive, leftLeader);
+    SendableRegistry.addChild(diffDrive, rightLeader);
 
     leftFollower.follow(leftLeader);
     rightFollower.follow(rightLeader);
@@ -67,22 +66,25 @@ public class Drive extends SubsystemBase {
     rightLeader.setInverted(true);
 
     // Sets the distance per pulse for the encoders
-    leftEncoder.setDistancePerPulse(DriveConstants.kEncoderDistancePerPulse);
-    rightEncoder.setDistancePerPulse(DriveConstants.kEncoderDistancePerPulse);
+    leftEncoder.setDistancePerPulse(DriveConstants.encoderDistancePerPulse);
+    rightEncoder.setDistancePerPulse(DriveConstants.encoderDistancePerPulse);
 
     resetEncoders();
 
 // PATH FOLLOWING: add odometry to DRIVE 
     // this tracks the robots position as it moves through  gyro and both encoders
-    odometry = new DifferentialDriveOdometry(
-            gyro.getRotation2d(), leftEncoder.getDistance(), rightEncoder.getDistance());
+    diffOdometry = new DifferentialDriveOdometry(
+              gyro.getRotation2d()
+            , leftEncoder.getDistance()
+            , rightEncoder.getDistance() );
+
   }
 
   @Override
   public void periodic() {
     
 // PATH FOLLOWING: Update the odometry in the periodic block
-    odometry.update(
+    diffOdometry.update(
         gyro.getRotation2d(), leftEncoder.getDistance(), rightEncoder.getDistance());
 
             LimelightHelpers.LimelightResults llresults = LimelightHelpers.getLatestResults("limelight");
@@ -93,7 +95,7 @@ public class Drive extends SubsystemBase {
   }
 // PATH FOLLOWING: 
   /** @return The currently-estimated pose of the robot */
-  public Pose2d getPose() { return odometry.getPoseMeters();  }
+  public Pose2d getPose() { return diffOdometry.getPoseMeters();  }
 
   // PATH FOLLOWING: 
   /** @return The current wheel speeds */
@@ -105,7 +107,7 @@ public class Drive extends SubsystemBase {
   /** @param pose reset the pose to which to set the odometry */
   public void resetOdometry(Pose2d pose) {
       resetEncoders();
-      odometry.resetPosition( gyro.getRotation2d()
+      diffOdometry.resetPosition( gyro.getRotation2d()
           , leftEncoder.getDistance()
           , rightEncoder.getDistance()
           , pose );
@@ -118,13 +120,13 @@ public class Drive extends SubsystemBase {
   public void tankDriveVolts(double leftVolts, double rightVolts) {
     leftLeader.setVoltage(leftVolts);
     rightLeader.setVoltage(rightVolts);
-    drive.feed();
+    diffDrive.feed();
 }
 
   /** Drives the robot using arcade controls.
   * @param fwd @param rot commanded forward and rotation movement */
   public void arcadeDrive(double fwd, double rot) {
-    drive.arcadeDrive(fwd, rot);
+    diffDrive.arcadeDrive(fwd, rot);
   }
 
   /** Resets the drive encoders to currently read a position of 0. */
@@ -147,7 +149,7 @@ public class Drive extends SubsystemBase {
 
   /** Sets the max output of the drive. Useful for scaling the drive to drive more slowly.
    * @param maxOutput the maximum output to which the drive will be constrained  */
-  public void setMaxOutput(double maxOutput) {  drive.setMaxOutput(maxOutput);  }
+  public void setMaxOutput(double maxOutput) {  diffDrive.setMaxOutput(maxOutput);  }
 
   /** Zeroes the heading of the robot */
   // public void zeroHeading() { gyro.reset(); }

@@ -30,7 +30,7 @@ public class RobotContainer {
   
   
   // The driver's controller
-  XboxController driverController = new XboxController(OIConstants.kDriverControllerPort);
+  XboxController driverController = new XboxController(OIConstants.USB_DRIVECONTROLLER);
 
   // PATH FOLLOWING objects in Robot Container
   private RamseteCommand ramseteCommand;

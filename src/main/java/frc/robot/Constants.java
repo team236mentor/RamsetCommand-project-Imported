@@ -16,25 +16,26 @@ import edu.wpi.first.math.util.Units;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+
   public static final class DriveConstants {
-    public static final int kLeftMotor1Port = 35;   //   35  left front 
-    public static final int kLeftMotor2Port = 34;    //  34  left rear 
-    public static final int kRightMotor1Port = 1;   //   1   right front 
-    public static final int kRightMotor2Port = 32;   //  32  right rear
+    public static final int ID_LEFT_FRONT = 35;   //   35  left front   // 40 
+    public static final int ID_LEFT_REAR = 34;    //  34  left rear     // 41
+    public static final int ID_RIGHT_FRONT = 1;   //   1   right front  // 42
+    public static final int ID_RIGHT_REAR = 32;   //  32  right rear    // 43
 
-    public static final int[] kLeftEncoderPorts = new int[] {18, 19};   //DIO_LDRIVE_ENC_A,B = 18 , 19
-    public static final int[] kRightEncoderPorts = new int[] {13, 12};  //DIO_RDRIVE_ENC_A,B = 13 , 12  (or 8,9 NAVX ports)
-    public static final boolean kLeftEncoderReversed = false;         
-    public static final boolean kRightEncoderReversed = true;         
+    public static final int[] kLeftEncoderPorts = new int[] {11, 10};   //DIO_LDRIVE_ENC_A,B = 18 , 19 // 11, 10
+    public static final int[] kRightEncoderPorts = new int[] {6, 7};  //DIO_RDRIVE_ENC_A,B = 13 , 12   //  6,  7
+    public static final boolean leftEncoderReversed = false;         
+    public static final boolean rightEncoderReversed = true;         
 
-    public static final double kTrackwidthMeters =  Units.inchesToMeters(24);    //  0.69;   
-    public static final DifferentialDriveKinematics kDriveKinematics = new DifferentialDriveKinematics(kTrackwidthMeters);
+    public static final double trackwidthMeters =  Units.inchesToMeters(24);    //  0.69;   
+    public static final DifferentialDriveKinematics driveKinematics = new DifferentialDriveKinematics(trackwidthMeters);
 
-    public static final int kEncoderCPR = 128;    // bourns Inc ENS1J-B28-L00128L   //  2023 robot code lists 512 counts/ticks per revolution 
-    public static final double kWheelDiameterMeters = Units.inchesToMeters(6);  //  0.15;  
-    public static final double kEncoderDistancePerPulse =
+    public static final int encoderCPR = 128;    // bourns Inc ENS1J-B28-L00128L   //  2023 robot code lists 512 counts/ticks per revolution 
+    public static final double wheelDiameterMeters = Units.inchesToMeters(6);  //  0.15;  
+    public static final double encoderDistancePerPulse =
         // Assumes the encoders are directly mounted on the wheel shafts
-        (kWheelDiameterMeters * Math.PI) / (double) kEncoderCPR;
+        (wheelDiameterMeters * Math.PI) / (double) encoderCPR;
 
     // These are example values only - DO NOT USE THESE FOR YOUR OWN ROBOT!
     // These characterization values MUST be determined either experimentally or theoretically
@@ -50,15 +51,13 @@ public final class Constants {
   }
 
   public static final class OIConstants {
-    public static final int kDriverControllerPort = 0;
+    public static final int USB_DRIVECONTROLLER = 0;
+    // public static final int USB_AUXCONTROLLER = 1;
   }
 
   public static final class AutoConstants {
-    public static final double kMaxSpeedMetersPerSecond = 3;                // example 3 meters/sec
-    public static final double kMaxAccelerationMetersPerSecondSquared = 1;  // example 1 Meter/Sec^2
-
-    // Reasonable baseline values for a RAMSETE follower in units of meters and seconds
-    public static final double kRamseteB = 2;
-    public static final double kRamseteZeta = 0.7;
+    public static final double maxSpeedMetersPerSecond = 3;                // example 3 meters/sec
+    public static final double maxAccelerationMetersPerSecondSquared = 1;  // example 1 Meter/Sec^2
   }
+
 }

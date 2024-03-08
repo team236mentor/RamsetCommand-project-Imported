@@ -22,15 +22,15 @@ import frc.robot.Constants.DriveConstants;
 public class Drive extends SubsystemBase {
   
   // The motors on the left side of the drive.
-  private final CANSparkMax leftLeader = new CANSparkMax(DriveConstants.kLeftMotor1Port,MotorType.kBrushless);
+  private final CANSparkMax leftMotor = new CANSparkMax(DriveConstants.kLeftMotor1Port,MotorType.kBrushless);
   private final CANSparkMax leftFollower = new CANSparkMax(DriveConstants.kLeftMotor2Port,MotorType.kBrushless);
   // The motors on the right side of the drive.
-  private final CANSparkMax rightLeader = new CANSparkMax(DriveConstants.kRightMotor1Port,MotorType.kBrushless);
+  private final CANSparkMax rightMotor = new CANSparkMax(DriveConstants.kRightMotor1Port,MotorType.kBrushless);
   private final CANSparkMax rightFollower = new CANSparkMax(DriveConstants.kRightMotor2Port,MotorType.kBrushless);
   
   
   // The robot's drive
-  private final DifferentialDrive drive = new DifferentialDrive(leftLeader::set, rightLeader::set);
+  private final DifferentialDrive drive = new DifferentialDrive(leftMotor::set, rightMotor::set);
 
   // The left-side drive encoder
   private final Encoder leftEncoder =  new Encoder(
@@ -52,24 +52,27 @@ public class Drive extends SubsystemBase {
 
   /** Creates a new DriveSubsystem. */
   public Drive() {
-    SendableRegistry.addChild(drive, leftLeader);
-    SendableRegistry.addChild(drive, rightLeader);
+    SendableRegistry.addChild(drive, leftMotor);
+    SendableRegistry.addChild(drive, rightMotor);
 
-    leftFollower.follow(leftLeader);
-    rightFollower.follow(rightLeader);
+    leftFollower.follow(leftMotor);
+    rightFollower.follow(rightMotor);
 
     // We need to invert one side of the drivetrain so that positive voltages
     // result in both sides moving forward. Depending on how your robot's
     // gearbox is constructed, you might have to invert the left side instead.
-    rightLeader.setInverted(true);
+    rightMotor.setInverted(true);
 
     // Sets the distance per pulse for the encoders
     leftEncoder.setDistancePerPulse(DriveConstants.kEncoderDistancePerPulse);
     rightEncoder.setDistancePerPulse(DriveConstants.kEncoderDistancePerPulse);
 
     resetEncoders();
-    odometry = new DifferentialDriveOdometry(
-            gyro.getRotation2d(), leftEncoder.getDistance(), rightEncoder.getDistance() );
+    odometry = new DifferentialDriveOdometry( 
+        gyro.getRotation2d()
+      , leftEncoder.getDistance()
+      , rightEncoder.getDistance() );
+
     }
 
   @Override
@@ -119,8 +122,8 @@ public class Drive extends SubsystemBase {
    * @param rightVolts the commanded right output
    */
   public void tankDriveVolts(double leftVolts, double rightVolts) {
-    leftLeader.setVoltage(leftVolts);
-    rightLeader.setVoltage(rightVolts);
+    leftMotor.setVoltage(leftVolts);
+    rightMotor.setVoltage(rightVolts);
     drive.feed();
   }
 

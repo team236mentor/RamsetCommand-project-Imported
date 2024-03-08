@@ -52,8 +52,7 @@ public class RobotContainer {
 
   // The driver's controller
   private XboxController driverController = new XboxController(OIConstants.kDriverControllerPort);
-  private static final DifferentialDriveKinematics kDriveKinematics =
-        new DifferentialDriveKinematics(Constants.DriveConstants.kTrackwidthMeters);
+  private static final DifferentialDriveKinematics kDriveKinematics = new DifferentialDriveKinematics(Constants.DriveConstants.kTrackwidthMeters);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -199,53 +198,53 @@ public class RobotContainer {
             //option 1 for driving 
         exampleTrajectory = TrajectoryGenerator.generateTrajectory(
             // Start at the origin facing the +X direction
-            new Pose2d(0, 0, new Rotation2d(0)),
+            new Pose2d(0, 0, new Rotation2d(Units.degreesToRadians(0))),
             // Pass through these two interior waypoints, making an 's' curve path
                 List.of(
                    new Translation2d(Units.inchesToMeters(30), Units.inchesToMeters(0))
                  , new Translation2d(Units.inchesToMeters(60), Units.inchesToMeters(-30))  )
-               , new Pose2d(Units.inchesToMeters(90),Units.inchesToMeters(0), new Rotation2d(0)),
+               , new Pose2d(Units.inchesToMeters(90),Units.inchesToMeters(0), new Rotation2d(Units.degreesToRadians(0))),
             // Pass config
             config);
     } else if (autoSwitch1.get() == true  ) {
    //option 2 for driving 
         exampleTrajectory = TrajectoryGenerator.generateTrajectory(
             // Start at the origin facing the +X direction
-            new Pose2d(0, 0, new Rotation2d(0)),
+            new Pose2d(0, 0, new Rotation2d(Units.degreesToRadians(0))),
             // Pass through these two interior waypoints, making an 's' curve path
                 List.of(
                    new Translation2d(Units.inchesToMeters(10), Units.inchesToMeters(0))
                  , new Translation2d(Units.inchesToMeters(20), Units.inchesToMeters(10))
                  , new Translation2d(Units.inchesToMeters(30), Units.inchesToMeters(-10))  )
-               , new Pose2d(Units.inchesToMeters(40),Units.inchesToMeters(20), new Rotation2d(0)),
+               , new Pose2d(Units.inchesToMeters(40),Units.inchesToMeters(20), new Rotation2d(Units.degreesToRadians(0))),
             // Pass config
             config);
     } else  {
        exampleTrajectory = TrajectoryGenerator.generateTrajectory(
             // Start at the origin facing the +X direction
-            new Pose2d(0, 0, new Rotation2d(180)),
+            new Pose2d(0, 0, new Rotation2d(Units.degreesToRadians(180))),
             // Pass through these two interior waypoints, making an 's' curve path
                 List.of(
                    new Translation2d(Units.inchesToMeters(30), Units.inchesToMeters(30))
                  , new Translation2d(Units.inchesToMeters(60), Units.inchesToMeters(-30))  )
-               , new Pose2d(Units.inchesToMeters(90),Units.inchesToMeters(0), new Rotation2d(0)),
+               , new Pose2d(Units.inchesToMeters(90),Units.inchesToMeters(0), new Rotation2d(Units.degreesToRadians(0))),
             // Pass config
             config);
     }
 
 
     RamseteCommand ramseteCommand = new RamseteCommand(
-            exampleTrajectory,
+        exampleTrajectory,
         drive::getPose,
-            new RamseteController(AutoConstants.kRamseteB, AutoConstants.kRamseteZeta),
-            new SimpleMotorFeedforward(
-                DriveConstants.ksVolts,
-                DriveConstants.kvVoltSecondsPerMeter,
-                DriveConstants.kaVoltSecondsSquaredPerMeter),
-            kDriveKinematics,
+        new RamseteController(AutoConstants.kRamseteB, AutoConstants.kRamseteZeta),
+        new SimpleMotorFeedforward(
+            DriveConstants.ksVolts,
+            DriveConstants.kvVoltSecondsPerMeter,
+            DriveConstants.kaVoltSecondsSquaredPerMeter),
+        kDriveKinematics,
         drive::getWheelSpeeds,
-            new PIDController(DriveConstants.kPDriveVel, 0, 0),
-            new PIDController(DriveConstants.kPDriveVel, 0, 0),
+        new PIDController(DriveConstants.kPDriveVel, 0, 0),
+        new PIDController(DriveConstants.kPDriveVel, 0, 0),
             // RamseteCommand passes volts to the callback
         drive::tankDriveVolts,
         drive);
